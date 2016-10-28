@@ -10,8 +10,15 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michael:mypassword@localhost/game'
 
 @app.route('/', methods=['POST'])
-def game_handler():
-  print(request.data)
+def request_handler():
+  team_id = request.form['team_id']
+  channel_id = request.form['channel_id']
+  user_id = request.form['user_id']
+  user_name = request.form['user_name']
+  text = request.form['text']
+  
+  text_list = text.split(' ', 1)
+  
   return 'woah'
 
 if __name__ == '__main__':
