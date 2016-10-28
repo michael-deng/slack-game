@@ -8,14 +8,22 @@ db = SQLAlchemy(app)
 class Game(db.Model):
   __tablename__ = "game"
   id = db.Column('id', db.Integer, primary_key=True)
-  team_id = db.Column('team_id', db.Unicode)
-  channel_id = db.Column('channel_id', db.Unicode)
+  team_id = db.Column('team_id', db.String(20))
+  channel_id = db.Column('channel_id', db.String(20))
   board_dimensions = db.Column('board_dimensions', db.Integer)
   player1_id = db.Column('player1_id', db.Integer, db.ForeignKey('player.id'))
   player2_id = db.Column('player2_id', db.Integer, db.ForeignKey('player.id'))
 
-  player1 = db.relationship('Player', foreign_keys=player1_id)
-  player2 = db.relationship('Player', foreign_keys=player2_id)
+  player1 = db.relationship(
+  	'Player', 
+  	foreign_keys=player1_id, 
+  	backref='games_as_player1'
+  )
+  player2 = db.relationship(
+  	'Player', 
+  	foreign_keys=player2_id, 
+  	backref='games_as_player2'
+  )
 
   def __init__(self, team_id, channel_id, board_dimensions, player1, player2):
     self.team_id = team_id
@@ -33,8 +41,16 @@ class Piece(db.Model):
   player_id = db.Column(db.Integer, db.ForeignKey('player.id'))
   game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
 
-  player = db.relationship('Player', foreign_keys=player_id)
-  game = db.relationship('Game', foreign_keys=game_id)
+  player = db.relationship(
+  	'Player', 
+  	foreign_keys=player_id, 
+  	backref='pieces'
+  )
+  game = db.relationship(
+  	'Game', 
+  	foreign_keys=game_id, 
+  	backref='pieces'
+  )
 
   def __init__(self, x_coord, y_coord, player, game):
     self.x_coord = x_coord
@@ -46,8 +62,8 @@ class Piece(db.Model):
 class Player(db.Model):
   __tablename__ = "player"
   id = db.Column('id', db.Integer, primary_key=True)
-  user_id = db.Column('user_id', db.Unicode)
-  user_name = db.Column('user_name', db.Unicode)
+  user_id = db.Column('user_id', db.String(20))
+  user_name = db.Column('user_name', db.String(20))
 
   def __init__(self, user_id, user_name):
     self.user_id = user_id
