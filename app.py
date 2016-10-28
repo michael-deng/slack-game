@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michael:mypassword@localho
 
 @app.route('/', methods=['POST'])
 def game_handler():
-  System.out.println(request.data)
+  print(request.data)
   return 'woah'
 
 if __name__ == '__main__':
