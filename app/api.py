@@ -10,6 +10,7 @@ from constants import *
 
 @app.route('/', methods=['POST'])
 def request_handler():
+    """Dispatches different commands to their respective handlers."""
     team_id = request.form['team_id']
     channel_id = request.form['channel_id']
     user_id = request.form['user_id']
@@ -23,6 +24,10 @@ def request_handler():
         return handle_challenge(team_id, channel_id, user_id, user_name, opponent)
     elif command == "accept":
         return handle_accept(team_id, channel_id, user_id, user_name)
+    elif command == "help":
+        return handle_help()
+    elif command == "moves":
+        return handle_get_moves()
     elif command == "status":
         return handle_status(team_id, channel_id)
     elif command in MOVES:
@@ -32,6 +37,7 @@ def request_handler():
         return INVALID_COMMAND_ERROR
 
 def handle_challenge(team_id, channel_id, user_id, user_name, opponent_name):
+    """Initializes team/channel if they don't exist and creates a new challenge."""
     team = Team.query.filter_by(team_id=team_id).first()
     if team == None:
         team = Team(team_id)
@@ -63,6 +69,7 @@ def handle_challenge(team_id, channel_id, user_id, user_name, opponent_name):
     })
 
 def handle_accept(team_id, channel_id, user_id, user_name):
+    """Accepts a challenge and initializes a new game."""
     team = Team.query.filter_by(team_id=team_id).first()
     if team == None:
         return NO_CHALLENGE_ERROR
@@ -97,7 +104,37 @@ def handle_accept(team_id, channel_id, user_id, user_name):
         "text": resp_text
     })
 
+def handle_help():
+    """Returns a list of basic commands."""
+    resp_text = ("Play tic-tac-toe in Slack!\n"
+                 "`/ttt challenge [someone]` to challenge them to a game\n"
+                 "`/ttt accept` to accept a challenge\n"
+                 "`/ttt status` to see the condition of the current game\n"
+                 "`/ttt moves` to see a list of available moves\n")
+    return jsonify({
+        "response_type": "ephemeral",
+        "text": resp_text
+    })
+
+def handle_get_moves():
+    """Returns a list of available moves."""
+    resp_text = ("Available moves\n"
+                 "`/ttt topleft` to place in the top left square\n"
+                 "`/ttt top` to place in the top square\n"
+                 "`/ttt topright` to place in the top right square\n"
+                 "`/ttt left` to place in the left square\n"
+                 "`/ttt center` to place in the center square\n"
+                 "`/ttt right` to place in the right square\n"
+                 "`/ttt bottomleft` to place in the bottom left square\n"
+                 "`/ttt bottom` to place in the bottom square\n"
+                 "`/ttt bottomright` to place in the bottom right square\n")
+    return jsonify({
+        "response_type": "ephemeral",
+        "text": resp_text
+    })
+
 def handle_status(team_id, channel_id):
+    """Returns the current game board and whose turn it is"""
     team = Team.query.filter_by(team_id=team_id).first()
     if team == None:
         return NO_ACTIVE_GAME_ERROR
@@ -114,11 +151,12 @@ def handle_status(team_id, channel_id):
     resp_text = ("{0} It's {1}'s turn right now."
                 .format(curr_board, most_recent_game.current_player_name))
     return jsonify({
-        "response_type": "in_channel",
+        "response_type": "ephemeral",
         "text": resp_text
     })
 
 def handle_move(team_id, channel_id, user_id, user_name, x, y):
+    """Makes a move and returns the current state of the game."""
     team = Team.query.filter_by(team_id=team_id).first()
     if team == None:
         return NOT_IN_A_GAME_ERROR
@@ -146,7 +184,7 @@ def handle_move(team_id, channel_id, user_id, user_name, x, y):
     
     curr_player_pieces = pieces.filter_by(player=curr_player)
     curr_board = get_current_board(most_recent_game, pieces)
-    if current_player_won(curr_player_pieces):
+    if victory(curr_player_pieces):
         most_recent_game.finished = True
         resp_text = "{0} {1} has won the game!".format(curr_board, user_name)
     elif pieces.count() == BOARD_SIZE * BOARD_SIZE:
@@ -166,7 +204,8 @@ def handle_move(team_id, channel_id, user_id, user_name, x, y):
         "text": resp_text
     })
 
-def current_player_won(pieces):
+def victory(pieces):
+    """Returns whether or not the pieces are in a winning configuration."""
     board = [[0 for i in range(BOARD_SIZE)] for j in range(BOARD_SIZE)]
     for piece in pieces:
         x = piece.x_coord
@@ -194,6 +233,7 @@ def current_player_won(pieces):
     return False
 
 def get_current_board(game, pieces):
+    """Gets the current game board and returns its string representation."""
     board = [[' ' for i in range(BOARD_SIZE)] for j in range(BOARD_SIZE)]
     for piece in pieces:
         x = piece.x_coord
