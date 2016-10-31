@@ -6,7 +6,7 @@ from app import db
 class Game(db.Model):
     __tablename__ = "game"
     id = db.Column('id', db.Integer, primary_key=True)
-    board_dimension = db.Column('board_dimension', db.Integer)
+    board_size = db.Column('board_size', db.Integer)
     current_player_name = db.Column('current_player', db.String(25))
     finished = db.Column('finished', db.Boolean, default=False)
     channel_id = db.Column('channel_id', db.Integer, db.ForeignKey('channel.id'))
@@ -29,8 +29,8 @@ class Game(db.Model):
         backref=db.backref('games_as_player2', lazy="dynamic")
     )
 
-    def __init__(self, board_dimension, current_player_name, channel, player1, player2):
-        self.board_dimension = board_dimension
+    def __init__(self, board_size, current_player_name, channel, player1, player2):
+        self.board_size = board_size
         self.current_player_name = current_player_name
         self.channel = channel
         self.player1 = player1
