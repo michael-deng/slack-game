@@ -19,8 +19,8 @@ def request_handler():
     command_list = command.split(' ', 1)
 
     if command_list[0] == "challenge" and len(command_list) == 2:
-        opponent_name = command_list[1]
-        return handle_challenge(team_id, channel_id, user_id, user_name, opponent_name)
+        opponent = command_list[1]
+        return handle_challenge(team_id, channel_id, user_id, user_name, opponent)
     elif command == "accept":
         return handle_accept(team_id, channel_id, user_id, user_name)
     elif command == "status":
@@ -90,7 +90,7 @@ def handle_accept(team_id, channel_id, user_id, user_name):
     db.session.add(game)
     db.session.commit()
     resp_text = ("{0} has accepted the challenge! {1} has Xs and {0} has Os. "
-                 "{3} has the first turn, good luck!"
+                 "{2} has the first turn, good luck!"
                  .format(user_name, challenger.user_name, starting_player))
     return jsonify({
         "response_type": "in_channel",
