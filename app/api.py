@@ -1,6 +1,6 @@
 #!env/bin/python
 
-from flask import request
+from flask import request, jsonify
 # from flask_sqlalchemy import SQLAlchemy
 # from flask import jsonify
 # from flask import make_response
@@ -23,8 +23,8 @@ def request_handler():
     command_list = command.split(' ', 1)
 
     if command_list[0] == "challenge" and len(command_list) == 2:
-        opponent = command_list[1]
-        res = handle_challenge(team_id, channel_id, user_id, user_name, opponent)
+        opponent_name = command_list[1]
+        res = handle_challenge(team_id, channel_id, user_id, user_name, opponent_name)
     elif command == "accept":
         res = handle_accept(team_id, channel_id, user_id, user_name)
     elif command == "status":
@@ -35,7 +35,7 @@ def request_handler():
         res = "We can't recognize your command! Type '/ttt help' for a list of possible commands."
     return res
 
-def handle_challenge(team_id, channel_id, user_id, user_name, opponent):
+def handle_challenge(team_id, channel_id, user_id, user_name, opponent_name):
     team = Team.query.filter_by(team_id=team_id).first()
     if team == None:
         team = Team(team_id)
@@ -55,11 +55,14 @@ def handle_challenge(team_id, channel_id, user_id, user_name, opponent):
         player = Player(user_id, user_name, channel)
         db.session.add(player)
     
-    challenge = Challenge(opponent, channel, player)
+    challenge = Challenge(opponent_name, channel, player)
     db.session.add(challenge)
     db.session.commit()
-    return ("{0} has challenged {1} to a game of tic-tac-toe! If you're {3}, type '/ttt accept' to start the game."
-            .format(user_name, opponent, opponent))
+    return jsonify({
+        "response_type": "in_channel",
+        "text": ("{0} has challenged {1} to a game of tic-tac-toe! Type '/ttt accept' to start the game."
+                .format(user_name, opponent_name))
+    })
 
 def handle_accept(team_id, channel_id, user_id, user_name):
     team = Team.query.filter_by(team_id=team_id).first()
@@ -71,7 +74,7 @@ def handle_accept(team_id, channel_id, user_id, user_name):
         return "You haven't been challenged by anyone."
 
     most_recent_challenge = channel.challenges.order_by(Challenge.id.desc()).first()
-    if most_recent_challenge == None or most_recent_challenge.expired or most_recent_challenge.opponent != user_name:
+    if most_recent_challenge == None or most_recent_challenge.expired or most_recent_challenge.opponent_name != user_name:
         return "You haven't been challenged by anyone."
 
     most_recent_challenge.expired = True
@@ -81,11 +84,15 @@ def handle_accept(team_id, channel_id, user_id, user_name):
         player = Player(user_id, user_name, channel)
         db.session.add(player)
 
-    starting_player = random.choice([user_name, challenger.user_name])
-    game = Game(BOARD_DIMENSION, starting_player, channel, challenger, player)
+    starting_player_name = random.choice([user_name, challenger.user_name])
+    game = Game(BOARD_DIMENSION, starting_player_name, channel, challenger, player)
     db.session.add(game)
     db.session.commit()
-    return "{0} has accepted the challenge!".format(starting_player)
+    return jsonify({
+        "response_type": "in_channel",
+        "text": ("{0} has accepted the challenge! {1} has the first turn."
+                .format(user_name, starting_player_name))
+    })
 
 def handle_status(team_id, channel_id):
     team = Team.query.filter_by(team_id=team_id).first()
@@ -100,9 +107,12 @@ def handle_status(team_id, channel_id):
     if most_recent_game == None or most_recent_game.finished:
         return "No one is playing right now."
 
-    response = get_current_board(most_recent_game.pieces)
-    response += "It's {0}'s turn right now.".format(most_recent_game.current_player)
-    return response
+    response = get_current_board(most_recent_game, most_recent_game.pieces)
+    response += " It's {0}'s turn right now.".format(most_recent_game.current_player_name)
+    return jsonify({
+        "response_type": "in_channel",
+        "text": response
+    })
 
 
 def handle_move(team_id, channel_id, user_id, user_name, command):
@@ -116,38 +126,40 @@ def handle_move(team_id, channel_id, user_id, user_name, command):
 
     current_player = channel.players.filter_by(user_id=user_id).first()
     most_recent_game = channel.games.order_by(Game.id.desc()).first()
-    if most_recent_game.finished or most_recent_game.player1 != current_player or most_recent_game.player2 != current_player:
+    if most_recent_game == None or most_recent_game.finished or (most_recent_game.player1 != current_player and most_recent_game.player2 != current_player):
         return "You're not playing a game right now."
 
-    if most_recent_game.current_player != user_name:
+    if most_recent_game.current_player_name != user_name:
         return "It's not your turn right now."
 
     pieces = most_recent_game.pieces
 
     (x_coord, y_coord) = MOVES.get(command)
-    if pieces.query.filter_by(x_coord=x_coord, y_coord=y_coord).count() > 0:
+    if pieces.filter_by(x_coord=x_coord, y_coord=y_coord).count() > 0:
         return "This square is already taken."
 
     new_piece = Piece(x_coord, y_coord, current_player, most_recent_game)
     db.session.add(new_piece)
     pieces.append(new_piece)
+    
     current_player_pieces = pieces.filter_by(player=current_player)
-
-    opponent = most_recent_game.player1 if current_player == most_recent_game.player1 else most_recent_game.player2
-    most_recent_game.current_player = opponent.user_name
+    opponent = most_recent_game.player1 if current_player == most_recent_game.player2 else most_recent_game.player2
+    
+    most_recent_game.current_player_name = opponent.user_name
+    response = get_current_board(most_recent_game, pieces)
 
     current_player_won = check_player_won(current_player_pieces, current_player)
-    response = get_current_board(pieces)
     if current_player_won:
         most_recent_game.finished = True
-        response += "{0} has won the game!".format(user_name)
+        response += " {0} has won the game!".format(user_name)
     else:
-        response += "{0} has made a move, now it's {1}'s turn.".format(user_name, opponent.name)
+        response += " {0} has made a move, now it's {1}'s turn.".format(user_name, opponent.user_name)
 
     db.session.commit()
-    return response
-        
-
+    return jsonify({
+        "response_type": "in_channel",
+        "text": response
+    })
 
 def check_player_won(pieces, player):
     board = [[0 for i in range(BOARD_DIMENSION)] for j in range(BOARD_DIMENSION)]
@@ -178,13 +190,12 @@ def check_player_won(pieces, player):
         return True
     return False
 
-
-def get_current_board(pieces):
+def get_current_board(game, pieces):
     board = [[' ' for i in range(BOARD_DIMENSION)] for j in range(BOARD_DIMENSION)]
     for piece in pieces:
         x = piece.x_coord
         y = piece.y_coord
-        if piece.player == most_recent_game.player1:
+        if piece.player == game.player1:
             board[x][y] = 'X'
         else:
             board[x][y] = 'O'
