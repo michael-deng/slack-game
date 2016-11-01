@@ -42,4 +42,6 @@ player1 cannot accept your challenge anymore. This functionality is deliberate,
 but may have to be modified in the future if users consider it unintuitive.
 
 In api.py, there are some repeated error statements because I have to do
-existence checks for nested query objects.
+existence checks for nested query objects. I definitely want to abstract those
+away in the future to make the code cleaner.
+
