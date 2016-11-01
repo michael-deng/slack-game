@@ -94,9 +94,9 @@ class ApiTests(BaseTestCase):
         assert Challenge.query.first().opponent_name == 'victoria'
 
         resp_text = json.loads(response.data)['text']
-        assert resp_text == ("michael has challenged victoria to "
-                             "a game of tic-tac-toe! Type '/ttt accept' "
-                             "to start the game.")
+        assert resp_text == ("michael has challenged victoria to a game of "
+                             "tic-tac-toe!\nType '/ttt accept' to start the "
+                             "game.")
 
     def test_accept_success(self):
         self.client.post('/', data=self.michael_challenge)
@@ -106,12 +106,15 @@ class ApiTests(BaseTestCase):
         assert Game.query.first().player1.user_name == 'michael'
         assert Game.query.first().player2.user_name == 'victoria'
 
+        game = Game.query.first()
+        board = get_current_board(game)
         starting_player = Game.query.first().current_player_name
         resp_text = json.loads(response.data)['text']
-        assert resp_text == ("victoria has accepted the challenge! "
-                             "michael has Xs and victoria has Os. "
-                             "{0} has the first turn, good luck!"
-                             .format(starting_player))
+        assert resp_text == ("{0} victoria has accepted the challenge!\n"
+                             "michael has Xs and victoria has Os, {1} has the "
+                             "first turn, good luck!\nHint: `/ttt moves` "
+                             "shows you the commands for all possible moves."
+                             .format(board, starting_player))
 
     def test_challenge_failure(self):
         self.client.post('/', data=self.michael_challenge)
@@ -138,7 +141,7 @@ class ApiTests(BaseTestCase):
         db.session.add(Piece(1, 2, victoria, game))
         db.session.commit()
 
-        board_string = get_current_board(game, game.pieces)
+        board_string = get_current_board(game)
         assert board_string == ("``` X |   |   \n"
                                    "---+---+---\n"
                                    "   | O | O \n"
@@ -158,7 +161,7 @@ class ApiTests(BaseTestCase):
         db.session.add(Piece(1, 2, victoria, game))
         db.session.commit()
 
-        board = get_current_board(game, game.pieces)
+        board = get_current_board(game)
         response = self.client.post('/', data=self.status)
         resp_text = json.loads(response.data)['text']
         assert resp_text == ("{0} It's {1}'s turn right now."
@@ -234,9 +237,9 @@ class ApiTests(BaseTestCase):
 
         assert game.finished == True
 
-        board = get_current_board(game, game.pieces)
+        board = get_current_board(game)
         resp_text = json.loads(response.data)['text']
-        assert resp_text == ("{0} {1} has won the game!"
+        assert resp_text == ("{0} {1} has won the game! :fire:"
                              .format(board, game.current_player_name))
 
     def test_draw(self):
@@ -262,7 +265,7 @@ class ApiTests(BaseTestCase):
 
         assert game.finished == True
 
-        board = get_current_board(game, game.pieces)
+        board = get_current_board(game)
         resp_text = json.loads(response.data)['text']
         assert resp_text == ("{0} The game ended in a draw!"
                              .format(board))
