@@ -16,7 +16,8 @@ MOVES = {
 
 # Errors
 
-INVALID_COMMAND_ERROR = "We can't recognize your command! Type '/ttt help' for a list of possible commands."
+INVALID_COMMAND_ERROR = ("We can't recognize your command! "
+                         "Type '/ttt help' for a list of possible commands.")
 CANNOT_CHALLENGE_ERROR = "Someone else is playing right now."
 NO_CHALLENGE_ERROR = "No one challenged you."
 NO_ACTIVE_GAME_ERROR = "No one is playing right now."

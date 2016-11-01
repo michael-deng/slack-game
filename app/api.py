@@ -248,8 +248,9 @@ def get_current_board(game, pieces):
         for j in range(BOARD_SIZE):
             board_string += ' '
             board_string += board[i][j]
+            board_string += ' '
             if j != BOARD_SIZE - 1:
-                board_string += ' |'
+                board_string += '|'
         if i != BOARD_SIZE - 1:
             board_string += '\n'
             for k in range(BOARD_SIZE):
