@@ -29,8 +29,9 @@ TODO
 to play at the same time).
 4. Forfeit players when they disconnect.
 5. Put a timer on each turn and forfeit players who take too long.
-6. Generate an external documentation with Sphinx.
-7. Refactor some of the repeated code blocks.
+6. Refactor some of the repeated code blocks.
+7. Generate an external documentation with Sphinx.
+8. Add more comprehensive integration tests.
 
 ADDITIONAL CONSIDERATIONS
 
