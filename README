@@ -21,9 +21,9 @@ and type 'pip install -r requirements.txt'. You can configure the database
 by changing the SQLALCHEMY_DATABASE_URI in the config.py file. The current
 implementation uses PostgreSQL.
 
-TODO
+FUTURE TODO
 
-1. Allow players to forfeit.
+1. Allow players to forfeit/restart.
 2. Detect draws early.
 3. Save teams that have been validated once (to allow multiple channels
 to play at the same time).
