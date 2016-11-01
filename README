@@ -8,7 +8,8 @@ and search for Slash Commands. Click on Add Configuration and choose an
 appropriate command (like '/ttt'). In the URL section of Integration Settings,
 put 'https://slack-game-michaeldeng.herokuapp.com/' (or create your own web
 service to host the app on). As for the Token, you need to explicitly add
-that to the production environment.
+that to the production environment. Currently, the app is configured to work
+for Team 'ae12673295test0'.
 
 To increase the board size, change the BOARD_SIZE variable and add additional
 moves to the MOVES dictionary in the constants.py file.
