@@ -89,7 +89,7 @@ def handle_challenge(team_id, channel_id, user_id, user_name, opponent_name):
     db.session.add(challenge)
     db.session.commit()
     resp_text = ("{0} has challenged {1} to a game of tic-tac-toe!\n"
-                 "Type '/ttt accept' to start the game."
+                 "Type `/ttt accept` to start the game."
                  .format(user_name, opponent_name))
     return jsonify({
         "response_type": "in_channel",
