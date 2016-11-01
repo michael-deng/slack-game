@@ -16,7 +16,7 @@ def certificate_verification():
 @app.route('/', methods=['POST'])
 def request_handler():
     """Dispatches different commands to their respective handlers."""
-    token = request.form['team_id']
+    token = request.form['token']
     if token != os.environ['SLACK_TOKEN']:
         return UNAUTHORIZED_ERROR
 
