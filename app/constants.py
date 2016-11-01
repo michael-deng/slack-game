@@ -14,17 +14,15 @@ MOVES = {
     "bottomright": (2, 2)
 }
 
-# Errors
-
-INVALID_COMMAND_ERROR = ":crown: what"
-# INVALID_COMMAND_ERROR = ("Oh no! We can't recognize your command! "
-#                          "Type `/ttt help` for a list of possible commands.")
-CANNOT_CHALLENGE_ERROR = ("Someone else is playing right now, wait a bit and "
+INVALID_COMMAND_ERROR = ("Oh no! We can't recognize your command! Try typing "
+                         "`/ttt challenge [user]` to challenge someone to a "
+                         "game. You can also type `/ttt help` for more help.")
+CANNOT_CHALLENGE_ERROR = ("Someone else is playing right now. Wait a bit and "
                           "try again!")
-NO_CHALLENGE_ERROR = ("No one challenged you, but don't be sad, challenge "
+NO_CHALLENGE_ERROR = ("No one challenged you. Don't be sad, challenge "
                       "someone else!")
 NO_ACTIVE_GAME_ERROR = "No one is playing right now."
 NOT_IN_A_GAME_ERROR = ("You're not playing a game right now. Challenge "
                        "someone to start a new game!")
 INCORRECT_TURN_ERROR = "Wait for your turn!"
-SQUARE_TAKEN_ERROR = "That square is already taken."
+SQUARE_TAKEN_ERROR = "That square is already taken. Try an open one!"
