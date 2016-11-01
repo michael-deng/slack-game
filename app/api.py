@@ -60,8 +60,8 @@ def handle_challenge(team_id, channel_id, user_id, user_name, opponent_name):
         opponent_name: A string representing the user being challenged
 
     Returns:
-        A JSON response containing the details of a challenge. If the 
-        challenge fails because there is an ongoing game, the method returns 
+        A JSON response containing the details of a challenge. If the
+        challenge fails because there is an ongoing game, the method returns
         an error as a string.
     """
 
@@ -98,7 +98,7 @@ def handle_challenge(team_id, channel_id, user_id, user_name, opponent_name):
 def handle_accept(team_id, channel_id, user_id, user_name):
     """Accepts a challenge.
 
-    Creates a new team if the user accepting is the one specified by the 
+    Creates a new game if the user accepting is the one specified by the 
     most recent challenge.
 
     Args:
@@ -108,9 +108,9 @@ def handle_accept(team_id, channel_id, user_id, user_name):
         user_name: A string representing the user's name
 
     Returns:
-        A JSON response announcing the start of the game. If the accept fails 
-        because nobody has challenged the player, the method returns an error 
-        as a string.
+        A JSON response announcing the start of the game. If the accept fails
+        because nobody challenged the player, the method returns an error as
+        a string.
     """
 
     team = Team.query.filter_by(team_id=team_id).first()
@@ -155,7 +155,7 @@ def handle_help():
                  "`/ttt challenge [someone]` to challenge them to a game\n"
                  "`/ttt accept` to accept a challenge\n"
                  "`/ttt status` to see the condition of the current game\n"
-                 "`/ttt moves` to see a list of available moves\n")
+                 "`/ttt moves` to see a list of available moves")
     return jsonify({
         "response_type": "ephemeral",
         "text": resp_text
@@ -172,7 +172,7 @@ def handle_get_moves():
                  "`/ttt right` to place a piece in the right square\n"
                  "`/ttt bottomleft` to place a piece in the bottom left square\n"
                  "`/ttt bottom` to place a piece in the bottom square\n"
-                 "`/ttt bottomright` to place a piece in the bottom right square\n")
+                 "`/ttt bottomright` to place a piece in the bottom right square")
     return jsonify({
         "response_type": "ephemeral",
         "text": resp_text
@@ -186,8 +186,8 @@ def handle_status(team_id, channel_id):
         channel_id: A string representing a Slack channel's id
 
     Returns:
-        A JSON response containing the current game board and the player who 
-        holds the current turn. If there is no game happening, the method 
+        A JSON response containing the current game board and the player who
+        holds the current turn. If there is no game happening, the method
         returns an error as a string.
     """
 
@@ -222,13 +222,13 @@ def handle_move(team_id, channel_id, user_id, user_name, x, y):
         channel_id: A string representing a Slack channel's id
         user_id: A string representing a Slack user's id
         user_name: A string representing the user's name
-        x: An integer representing the x position of the new piece
-        y: An integer representing the y position of the new piece
+        x: An integer representing the x coordinate of the new piece
+        y: An integer representing the y coordinate of the new piece
 
     Returns:
-        A JSON response containing the updated game board and the player with 
-        the next turn. If the game has ended, the method will instead announce 
-        the winning player or that the game ended with a draw. If the move is 
+        A JSON response containing the updated game board and the player with
+        the next turn. If the game has ended, the method will instead announce
+        the winning player or that the game ended in a draw. If the move is
         invalid, the method returns an error as a string.
     """
 
@@ -282,14 +282,14 @@ def handle_move(team_id, channel_id, user_id, user_name, x, y):
 def victory(pieces):
     """Returns whether or not a player has attained victory.
 
-    Converts a list of pieces into a 2D array and analyzes that array to see 
-    if the pieces are in a winning configuration.
+    Converts a list of pieces into a 2D array and analyzes that array to see
+    if the pieces are in a winning pattern.
 
     Args:
         pieces: A list of Piece objects
 
     Returns:
-        A boolean representing whether or not the pieces are in a winning 
+        A boolean representing whether or not the pieces are in a winning
         configuration.
     """
 
@@ -322,7 +322,7 @@ def victory(pieces):
 def get_current_board(game):
     """Gets the current game board and returns its string representation.
 
-    Converts the pieces of a game into a 2D array and convert that 2D array
+    Converts the pieces of a game into a 2D array and converts that 2D array
     into a string.
 
     Args:
