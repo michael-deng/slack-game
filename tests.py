@@ -239,7 +239,7 @@ class ApiTests(BaseTestCase):
 
         board = get_current_board(game)
         resp_text = json.loads(response.data)['text']
-        assert resp_text == ("{0} {1} has won the game! :fire:"
+        assert resp_text == ("{0} Game over! {1} has won the game :fire:"
                              .format(board, game.current_player_name))
 
     def test_draw(self):

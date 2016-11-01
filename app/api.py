@@ -16,9 +16,9 @@ def certificate_verification():
 @app.route('/', methods=['POST'])
 def request_handler():
     """Dispatches different commands to their respective handlers."""
-    token = request.form['token']
-    if token != os.environ['SLACK_TOKEN']:
-        return UNAUTHORIZED_ERROR
+    # token = request.form['token']
+    # if token != os.environ['SLACK_TOKEN']:
+    #     return UNAUTHORIZED_ERROR
 
     team_id = request.form['team_id']
     channel_id = request.form['channel_id']
@@ -263,7 +263,7 @@ def handle_move(team_id, channel_id, user_id, user_name, x, y):
     curr_board = get_current_board(most_recent_game)
     if victory(curr_player_pieces):
         most_recent_game.finished = True
-        resp_text = "{0} {1} has won the game! :fire:".format(curr_board, user_name)
+        resp_text = "{0} Game over! {1} has won the game :fire:".format(curr_board, user_name)
     elif pieces.count() == BOARD_SIZE * BOARD_SIZE:
         most_recent_game.finished = True
         resp_text = "{0} The game ended in a draw!".format(curr_board)

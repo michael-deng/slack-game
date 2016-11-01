@@ -21,7 +21,7 @@ CANNOT_CHALLENGE_ERROR = ("Someone else is playing right now. Wait a bit and "
                           "try again!")
 NO_CHALLENGE_ERROR = ("No one challenged you, but that's okay, challenge "
                       "someone else!")
-NO_ACTIVE_GAME_ERROR = "No one is playing right now."
+NO_ACTIVE_GAME_ERROR = "No one is currently playing right now."
 NOT_IN_A_GAME_ERROR = ("You're not playing a game right now. Challenge "
                        "someone to start a new game!")
 INCORRECT_TURN_ERROR = "Wait for your turn!"
