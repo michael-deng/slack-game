@@ -1,3 +1,5 @@
+"""This module defines the database models."""
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 

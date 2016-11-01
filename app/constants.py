@@ -1,4 +1,4 @@
-# Game configurations
+"""This module defines the constants used throughout the application."""
 
 BOARD_SIZE = 3
 
@@ -16,11 +16,15 @@ MOVES = {
 
 # Errors
 
-INVALID_COMMAND_ERROR = ("We can't recognize your command! "
-                         "Type '/ttt help' for a list of possible commands.")
-CANNOT_CHALLENGE_ERROR = "Someone else is playing right now."
-NO_CHALLENGE_ERROR = "No one challenged you."
+INVALID_COMMAND_ERROR = ":crown: what"
+# INVALID_COMMAND_ERROR = ("Oh no! We can't recognize your command! "
+#                          "Type `/ttt help` for a list of possible commands.")
+CANNOT_CHALLENGE_ERROR = ("Someone else is playing right now, wait a bit and "
+                          "try again!")
+NO_CHALLENGE_ERROR = ("No one challenged you, but don't be sad, challenge "
+                      "someone else!")
 NO_ACTIVE_GAME_ERROR = "No one is playing right now."
-NOT_IN_A_GAME_ERROR = "You're not playing a game right now."
-INCORRECT_TURN_ERROR = "It's not your turn right now."
+NOT_IN_A_GAME_ERROR = ("You're not playing a game right now. Challenge "
+                       "someone to start a new game!")
+INCORRECT_TURN_ERROR = "Wait for your turn!"
 SQUARE_TAKEN_ERROR = "That square is already taken."

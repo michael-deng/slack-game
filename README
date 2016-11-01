@@ -1,0 +1,31 @@
+SLACK TIC-TAC-TOE GAME
+By: Michael Deng
+
+INTEGRATION
+
+To integrate this game into a new Slack channel, go to the App Directory 
+and search for Slash Commands. Click on Add Configuration and choose an
+appropriate command (like '/ttt'). In the URL section of Integration Settings, 
+put 'https://slack-game-michaeldeng.herokuapp.com/' (or whatever web service 
+you want to host this game on). As for the Token, you need to explicitly add 
+that to the code.
+
+To increase the board size, change the BOARD_SIZE variable and add additional 
+moves to the MOVES dictionary in the constants.py file.
+
+INSTALL
+
+To install this app on your computer, you should have python (this app was
+tested using Python 2.7) and a virtual environment. Clone the github repo 
+and type 'pip install -r requirements.txt'. You can configure the database
+by changing the SQLALCHEMY_DATABASE_URI in the config.py file.
+
+TODO
+
+1. Allow players to forfeit.
+2. Detect draws early.
+3. Save teams that have been validated once.
+4. Forfeit players when they disconnect.
+5. Put a timer on each turn and forfeit players who take too long.
+6. Generate an external documentation with Sphinx.
+7. Refactor some of the repeated code blocks.

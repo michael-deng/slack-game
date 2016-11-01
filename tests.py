@@ -1,3 +1,5 @@
+"""This module contains all the tests for this application."""
+
 from flask_testing import TestCase
 import unittest
 import json
@@ -73,12 +75,16 @@ class ApiTests(BaseTestCase):
         text='left',
     )
 
+    def test_certificate_verification(self):
+        response = self.client.get('/')
+        assert response.status_code == 200
+
     def test_invalid_command(self):
         response = self.client.post('/', data=self.invalid)
         assert response.status_code == 200
         assert response.data == INVALID_COMMAND_ERROR
 
-    def test_challenge(self):
+    def test_challenge_success(self):
         response = self.client.post('/', data=self.michael_challenge)
         assert Team.query.count() == 1
         assert Team.query.first().team_id == 'T2W2QQW5A'
@@ -92,7 +98,7 @@ class ApiTests(BaseTestCase):
                              "a game of tic-tac-toe! Type '/ttt accept' "
                              "to start the game.")
 
-    def test_accept(self):
+    def test_accept_success(self):
         self.client.post('/', data=self.michael_challenge)
         response = self.client.post('/', data=self.victoria_accept)
         assert Challenge.query.first().expired == True
@@ -139,7 +145,7 @@ class ApiTests(BaseTestCase):
                                    "---+---+---\n"
                                    " X |   |   ```")
 
-    def test_status(self):
+    def test_status_success(self):
         self.client.post('/', data=self.michael_challenge)
         self.client.post('/', data=self.victoria_accept)
         game = Game.query.first()
@@ -162,7 +168,7 @@ class ApiTests(BaseTestCase):
         response = self.client.post('/', data=self.status)
         assert response.data == NO_ACTIVE_GAME_ERROR
 
-    def test_move(self):
+    def test_move_success(self):
         self.client.post('/', data=self.michael_challenge)
         self.client.post('/', data=self.victoria_accept)
         game = Game.query.first()
@@ -176,7 +182,7 @@ class ApiTests(BaseTestCase):
         assert game.pieces.first().x_coord == 1
         assert game.pieces.first().y_coord == 0
 
-    def test_move_error(self):
+    def test_move_failure(self):
         response = self.client.post('/', data=self.michael_move)
         assert response.data == NOT_IN_A_GAME_ERROR
 
