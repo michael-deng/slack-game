@@ -95,7 +95,7 @@ class ApiTests(BaseTestCase):
 
         resp_text = json.loads(response.data)['text']
         assert resp_text == ("michael has challenged victoria to a game of "
-                             "tic-tac-toe!\nType '/ttt accept' to start the "
+                             "tic-tac-toe!\nType `/ttt accept` to start the "
                              "game.")
 
     def test_accept_success(self):

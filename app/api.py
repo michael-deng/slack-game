@@ -248,6 +248,7 @@ def handle_move(team_id, channel_id, user_id, user_name, x, y):
             (most_recent_game.player1 != curr_player and 
                 most_recent_game.player2 != curr_player)):
         return NOT_IN_A_GAME_ERROR
+
     if most_recent_game.current_player_name != user_name:
         return INCORRECT_TURN_ERROR
 
@@ -334,20 +335,20 @@ def get_current_board(game):
     """
 
     pieces = game.pieces
-    board = [[' ' for i in range(BOARD_SIZE)] for j in range(BOARD_SIZE)]
+    board_matrix = [[' ' for i in range(BOARD_SIZE)] for j in range(BOARD_SIZE)]
     for piece in pieces:
         x = piece.x_coord
         y = piece.y_coord
         if piece.player == game.player1:
-            board[x][y] = 'X'
+            board_matrix[x][y] = 'X'
         else:
-            board[x][y] = 'O'
+            board_matrix[x][y] = 'O'
 
     board_string = "```"
     for i in range(BOARD_SIZE):
         for j in range(BOARD_SIZE):
             board_string += ' '
-            board_string += board[i][j]
+            board_string += board_matrix[i][j]
             board_string += ' '
             if j != BOARD_SIZE - 1:
                 board_string += '|'

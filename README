@@ -29,7 +29,8 @@ TODO
 to play at the same time).
 4. Forfeit players when they disconnect.
 5. Put a timer on each turn and forfeit players who take too long.
-6. Refactor some of the repeated code blocks.
+6. Refactor some of the repeated code blocks (the repeated error-catching
+statements for existence checks).
 7. Generate an external documentation with Sphinx.
 8. Add more comprehensive integration tests.
 
@@ -39,3 +40,6 @@ Right now, only the most recent challenge is considered "active". What this
 means is that if you challenge player1, and player2 challenges player3, then
 player1 cannot accept your challenge anymore. This functionality is deliberate,
 but may have to be modified in the future if users consider it unintuitive.
+
+In api.py, there are some repeated error statements because I have to do
+existence checks for nested query objects.
