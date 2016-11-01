@@ -10,7 +10,7 @@ from constants import *
 
 @app.route('/', methods=['GET'])
 def certificate_verification():
-    """Returns a HTTP 200 OK to a certificate verification check"""
+    """Returns a HTTP 200 OK to a certificate verification check."""
     return ('', 200)
 
 @app.route('/', methods=['POST'])
@@ -109,9 +109,9 @@ def handle_accept(team_id, channel_id, user_id, user_name):
         user_name: A string representing the user's name
 
     Returns:
-        A JSON response announcing the start of the game. If the accept fails
-        because nobody challenged the player, the method returns an error as
-        a string.
+        A JSON response announcing the start of the game. If the accept
+        command fails because nobody challenged the player, the method returns
+        an error as a string.
     """
 
     team = Team.query.filter_by(team_id=team_id).first()
