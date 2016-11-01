@@ -14,6 +14,7 @@ MOVES = {
     "bottomright": (2, 2)
 }
 
+UNAUTHORIZED_ERROR = "You are not authorized to use this application."
 INVALID_COMMAND_ERROR = ("Oh no! We can't recognize your command! Try typing "
                          "`/ttt challenge [user]` to challenge someone to a "
                          "game. You can also type `/ttt help` for more help.")
