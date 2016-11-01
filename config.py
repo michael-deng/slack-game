@@ -10,4 +10,3 @@ class BaseConfiguration(object):
 
 class TestConfiguration(BaseConfiguration):
     TESTING = True
-

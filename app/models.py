@@ -134,4 +134,3 @@ class Channel(db.Model):
     def __init__(self, channel_id, team):
         self.channel_id = channel_id
         self.team = team
-

@@ -360,4 +360,3 @@ def get_current_board(game):
 
     board_string += "```"
     return board_string
-

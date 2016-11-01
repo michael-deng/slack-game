@@ -37,4 +37,4 @@ ADDITIONAL CONSIDERATIONS
 Right now, only the most recent challenge is considered "active". What this
 means is that if you challenge player1, and player2 challenges player3, then
 player1 cannot accept your challenge anymore. This functionality is deliberate,
-but may have to be modified in the future if users consider it unintuitive. 
+but may have to be modified in the future if users consider it unintuitive.
